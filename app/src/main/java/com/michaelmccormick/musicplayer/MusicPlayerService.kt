@@ -11,17 +11,26 @@ import android.util.Log
 
 class MusicPlayerService : Service(), MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener {
     private var mediaPlayer: MediaPlayer? = null
+    private var isPaused: Boolean = false
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         when (intent.action) {
             PlayerAction.ACTION_PLAY.value -> {
-                // Cleanup existing player in case it's already playing
-                cleanupPlayer()
-                mediaPlayer = createMediaPlayer()
+                if (isPaused) {
+                    isPaused = false
+                    mediaPlayer?.start()
+                } else {
+                    // Cleanup existing player in case it's currently playing
+                    cleanupPlayer()
+                    mediaPlayer = createMediaPlayer()
+                }
+            }
+            PlayerAction.ACTION_PAUSE.value -> {
+                isPaused = true
+                mediaPlayer?.pause()
             }
         }
-        // Returning START_REDELIVER_INTENT so that if service is killed
-        // we get relaunched with the original intent
+        // Returning START_REDELIVER_INTENT so that if service is killed we get relaunched with the original intent
         return START_REDELIVER_INTENT
     }
 
