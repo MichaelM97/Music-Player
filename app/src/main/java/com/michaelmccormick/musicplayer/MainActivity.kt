@@ -13,17 +13,24 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setupPlayButton()
+        setupPauseButton()
     }
 
     private fun setupPlayButton() {
         binding.playButton.setOnClickListener {
-            startMusicPlayerService()
+            startMusicPlayerService(PlayerAction.ACTION_PLAY)
         }
     }
 
-    private fun startMusicPlayerService() {
+    private fun setupPauseButton() {
+        binding.pauseButton.setOnClickListener {
+            startMusicPlayerService(PlayerAction.ACTION_PAUSE)
+        }
+    }
+
+    private fun startMusicPlayerService(action: PlayerAction) {
         Intent(this, MusicPlayerService::class.java).apply {
-            this.action = MusicPlayerService.ACTION_PLAY
+            this.action = action.value
         }.let {
             startService(it)
         }
