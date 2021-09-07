@@ -14,7 +14,7 @@ class MusicPlayerService : Service(), MediaPlayer.OnPreparedListener, MediaPlaye
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         when (intent.action) {
-            ACTION_PLAY -> {
+            PlayerAction.ACTION_PLAY.value -> {
                 // Cleanup existing player in case it's already playing
                 cleanupPlayer()
                 mediaPlayer = createMediaPlayer()
@@ -65,9 +65,5 @@ class MusicPlayerService : Service(), MediaPlayer.OnPreparedListener, MediaPlaye
     private fun cleanupPlayer() {
         mediaPlayer?.stop()
         mediaPlayer?.release()
-    }
-
-    companion object {
-        const val ACTION_PLAY = "com.michaelmccormick.musicplayer.PLAY"
     }
 }
