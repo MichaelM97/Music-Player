@@ -7,8 +7,9 @@ import android.media.MediaPlayer
 import android.net.Uri
 import android.os.IBinder
 import android.os.PowerManager
+import android.util.Log
 
-class MusicPlayerService : Service(), MediaPlayer.OnPreparedListener {
+class MusicPlayerService : Service(), MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener {
     private var mediaPlayer: MediaPlayer? = null
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
@@ -26,6 +27,13 @@ class MusicPlayerService : Service(), MediaPlayer.OnPreparedListener {
 
     override fun onPrepared(mediaPlayer: MediaPlayer) {
         mediaPlayer.start()
+    }
+
+    override fun onError(mediaPlayer: MediaPlayer, what: Int, extra: Int): Boolean {
+        mediaPlayer.stop()
+        mediaPlayer.release()
+        Log.e(MusicPlayerService::class.java.name, "$what $extra")
+        return true
     }
 
     override fun onDestroy() {
